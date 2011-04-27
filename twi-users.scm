@@ -5,15 +5,32 @@
 (start-audio "system:playback_3" 1024 44100)
 (gain .01)
 
+(load "source.scm")
+
 ; twitter user structure
 (define-struct twi-user
     (name screen-name followers-num
      tweets-num followers tweets
      label))
 
+(define twi-users (list))
+
 ; quick text object
 (define (qto _text)
     (build-extruded-type font _text .2))
+
+; load all users
+(define (load-all-twi-users)
+    (for-each (lambda (ulist) 
+              (append twi-users (make-twi-user
+                                      (list-ref ulist 0)
+                                      (list-ref ulist 1)
+                                      (list-ref ulist 4)
+                                      (list-ref ulist 3)
+                                      (list)
+                                      (list-tail ulist 4)
+                                      (qto (list-ref ulist 0)))))
+     mylist))
 
 ; myself
 (define me (make-twi-user

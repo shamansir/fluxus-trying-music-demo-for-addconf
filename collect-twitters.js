@@ -141,7 +141,8 @@ function save_results_to_file() {
             stream.write(' ');
             for (var i = 0; i < user.tweets.length; i++) {
                 stream.write('"' + user.tweets[i].replace(/\"/g, '`')
-                                                 .replace(/\r?\n|\r/g, ' ') + '" ');
+                                                 .replace(/\r?\n|\r/g, ' ')
+                                                 .replace(/\\/g, '|') + '" ');
             }
         }
         stream.write('\n');
