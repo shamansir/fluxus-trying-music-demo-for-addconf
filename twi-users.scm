@@ -20,17 +20,17 @@
     (build-extruded-type font _text .2))
 
 ; load all users
-(define (load-all-twi-users)
-    (for-each (lambda (ulist) 
-              (append twi-users (make-twi-user
-                                      (list-ref ulist 0)
-                                      (list-ref ulist 1)
-                                      (list-ref ulist 4)
-                                      (list-ref ulist 3)
-                                      (list)
-                                      (list-tail ulist 4)
-                                      (qto (list-ref ulist 0)))))
-     mylist))
+(define twi-users (build-list (length twit-data)
+    (lambda (pos)
+       (let ((ulist (list-ref twit-data pos)))
+            (make-twi-user
+                   (list-ref ulist 0)  ; name
+                   (list-ref ulist 1)  ; screen-name
+                   (list-ref ulist 4)  ; followers-num
+                   (list-ref ulist 3)  ; tweets-num
+                   (list)              ; followers
+                   (list-tail ulist 4) ; tweets
+                   (qto (list-ref ulist 0))))))) ; label
 
 ; myself
 (define me (make-twi-user
@@ -94,7 +94,12 @@
 
 ))
 
+(load-all-twi-users)
+
 ; every frame
 (every-frame
-    (draw-user me (sin (time))))
+        (for-each (lambda (user)
+              (display user)
+              (draw-user user (* (sin (time) 10))))
+         twi-users))
 
