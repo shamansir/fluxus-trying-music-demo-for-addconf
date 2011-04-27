@@ -18,13 +18,13 @@
 ; myself
 (define me (make-twi-user
         "shaman" "shaman_sir"
-        615 478 (list) (list)
+        600 1500 (list) (list)
         (qto "shaman")))
 
 ; draw user function
 (define (draw-user _user x-pos)
-    (let ((h (* .003 (twi-user-followers-num _user)))
-          (w (* .004 (twi-user-tweets-num _user))))
+    (let ((h (* .005 (twi-user-followers-num _user)))
+          (w (* .0006 (twi-user-tweets-num _user))))
 
     ; position
     (translate (vector x-pos 0 0))
@@ -32,7 +32,7 @@
     (with-state
         (colour (vector (gh 0) 0 0))
         (translate (vector 0 (- h .7) 0))
-        (scale h)
+        (scale (* h .4))
         (draw-sphere)
         ; eyes
         (colour (vector 1 1 1))
@@ -45,7 +45,7 @@
     (with-state
         (colour (vector (gh 1) (gh 1) 0))
         (translate (vector 0 -.4 0))
-        (scale (vector h w 1))
+        (scale (vector w h 1))
         (draw-cube))
     ; arms
     (with-state
