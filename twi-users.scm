@@ -2,6 +2,9 @@
 
 (define font "./DroidSans.ttf")
 
+(start-audio "system:playback_3" 1024 44100)
+(gain .01)
+
 ; twitter user structure
 (define-struct twi-user
     (name screen-name followers-num
@@ -19,10 +22,15 @@
         (qto "shaman")))
 
 ; draw user function
-(define (draw-user _user)
+(define (draw-user _user x-pos)
+    (let ((h (* .003 (twi-user-followers-num _user)))
+          (w (* .004 (twi-user-tweets-num _user))))
+
+    ; position
+    (translate (vector x-pos 0 0))
     ; head
     (with-state
-        (colour (vector 1 0 0))
+        (colour (vector (gh 0) 0 0))
         (translate (vector 0 1 0))
         (scale 0.6)
         (draw-sphere)
@@ -35,9 +43,9 @@
         (draw-sphere))
     ; body
     (with-state
-        (colour (vector 1 1 0))
+        (colour (vector (gh 1) (gh 1) 0))
         (translate (vector 0 -.4 0))
-        (scale (vector 1.2 1.6 1))
+        (scale (vector h w 1))
         (draw-cube))
     ; arms
     (with-state
@@ -64,11 +72,12 @@
     ; name
     (with-primitive (twi-user-label _user)
         (identity)
-        (translate (vector -1.3 -3.2 0))
+        (translate (vector (+ x-pos -1.3) -3.2 0))
         (scale .15))
-)
+
+))
 
 ; every frame
 (every-frame
-    (draw-user me))
+    (draw-user me (sin (time))))
 
