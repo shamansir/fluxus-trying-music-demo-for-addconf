@@ -31,8 +31,8 @@
     ; head
     (with-state
         (colour (vector (gh 0) 0 0))
-        (translate (vector 0 1 0))
-        (scale 0.6)
+        (translate (vector 0 (- h .7) 0))
+        (scale h)
         (draw-sphere)
         ; eyes
         (colour (vector 1 1 1))
