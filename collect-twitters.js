@@ -1,7 +1,8 @@
 var http = require('http');
+var fs = require('fs');
 var json = JSON;
 
-var OUTPUT = 'source.ssv';
+var OUTPUT = './source.ssv';
 
 var results = {}; // object of { '<screen_name>':
                   //                 { 'name': '...',
@@ -113,19 +114,43 @@ function store_user_info(user_info) {
 
 function store_statuses(user, statuses) {
     if (!results[user]) return;
-    results[user]['statuses'] = null;
+    results[user]['tweets'] = null;
     if (!statuses) return;
     var acc = [];
     for (var i = 0; i < statuses.length; i++) {
         acc.push(statuses[i].text);
     }
-    results[user]['statuses'] = acc;
-    console.log('> Got statuses for : ' + user);
+    results[user]['tweets'] = acc;
+    console.log('> Got tweets for : ' + user);
 }
 
 function save_results_to_file() {
     console.log('> Time to save results');
+
+    var stream = fs.createWriteStream(OUTPUT);
+
+    for (var uid in results) {
+        //if (!results.hasOwnProperty(user)) return;
+        var user = results[uid];
+        stream.write('"' + uid + '" ' +
+                     '"' + user.name + '" ' +
+                     '"' + user.location + '" ' +
+                     user.followers_num + ' ' +
+                     user.tweets_num);
+        if (user.tweets.length > 0) {
+            stream.write(' ');
+            for (var i = 0; i < user.tweets.length; i++) {
+                stream.write('"' + user.tweets[i].replace(/\"/g, '`')
+                                                 .replace(/\r?\n|\r/g, ' ') + '" ');
+            }
+        }
+        stream.write('\n');
+    }
+
+    stream.end();
 }
+
+// ================================== main() ===================================
 
 function main() {
     for (var i = 0; i < users_to_get.length; i++) {
@@ -145,7 +170,7 @@ function main() {
                   'screen_name=' + user,
                   store_user_info,
                   before)
-             .add('statuses/public_timeline',
+             .add('statuses/user_timeline',
                   'screen_name=' + user,
                   (function(user, i) { return function(data) {
                       store_statuses(user, data);
