@@ -1,7 +1,7 @@
 (clear)
 
-(start-audio "alsa_pcm:capture_1" 256 44100)
+(start-audio "system:playback_3" 1024 44100)
 
-;(every-frame (begin (display (gh 0)) (newline)))
+(every-frame (begin (display (gh 0)) (newline)))
 
 
