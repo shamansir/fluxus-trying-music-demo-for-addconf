@@ -18,14 +18,38 @@
         (draw-sphere)
         ; eyes
         (colour (vector 1 1 1))
-        (translate (vector 0 0 1))
         (scale 0.2)
+        (translate (vector 2 .2 6))
+        (draw-sphere)                
+        (translate (vector -4 0 0))
         (draw-sphere))
     ; body
     (with-state
         (colour (vector 1 1 0))
         (translate (vector 0 -.4 0))
         (scale (vector 1.2 1.6 1))
+        (draw-cube))
+    ; arms
+    (with-state
+        (colour (vector 0 .5 0))
+        (translate (vector -.9 -.2 0))
+        (scale (vector .3 1.2 .5))
+        (draw-cube))
+    (with-state
+        (colour (vector 0 .5 0))
+        (translate (vector .9 -.2 0))
+        (scale (vector .3 1.2 .5))
+        (draw-cube))
+    ; legs
+    (with-state
+        (colour (vector 0 0 .6))
+        (translate (vector -.2 -1.8 0))
+        (scale (vector .3 1.2 .5))
+        (draw-cube))
+    (with-state
+        (colour (vector 0 0 .6))
+        (translate (vector .2 -1.8 0))
+        (scale (vector .3 1.2 .5))
         (draw-cube))
 )
 
