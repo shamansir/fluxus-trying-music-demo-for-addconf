@@ -32,16 +32,10 @@
                    (list-tail ulist 4) ; tweets
                    (qto (list-ref ulist 0))))))) ; label
 
-; myself
-(define me (make-twi-user
-        "shaman" "shaman_sir"
-        600 1500 (list) (list)
-        (qto "shaman")))
-
 ; draw user function
 (define (draw-user _user x-pos)
-    (let ((h (* .005 (twi-user-followers-num _user)))
-          (w (* .0006 (twi-user-tweets-num _user))))
+    (let ((h (* .001 (twi-user-followers-num _user)))
+          (w (* .003 (twi-user-tweets-num _user))))
 
     ; position
     (translate (vector x-pos 0 0))
@@ -53,7 +47,7 @@
         (draw-sphere)
         ; eyes
         (colour (vector 1 1 1))
-        (scale 0.2)
+        (scale .2)
         (translate (vector 2 .2 6))
         (draw-sphere)
         (translate (vector -4 0 0))
@@ -89,17 +83,14 @@
     ; name
     (with-primitive (twi-user-label _user)
         (identity)
-        (translate (vector (+ x-pos -1.3) -3.2 0))
+        (translate (vector (* 3 x-pos) -3.5 0))
         (scale .15))
 
 ))
 
-(load-all-twi-users)
-
 ; every frame
 (every-frame
         (for-each (lambda (user)
-              (display user)
-              (draw-user user (* (sin (time) 10))))
+              (draw-user user (sin (time))))
          twi-users))
 
