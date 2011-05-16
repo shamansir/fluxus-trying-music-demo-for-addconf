@@ -15,7 +15,7 @@
 ; STRUCTURES
 
 (define-struct star (name diameter color))
-(define-struct planet (p 
+(define-struct planet (p
                        label ; text object
                        diameter ; equatorial diameter
                        distance ; orbital radius
@@ -39,16 +39,16 @@
                  0)))
 
 ; quick scale vector
-(define (qsv _diam) 
+(define (qsv _diam)
     (vector (* _diam diameter-factor)
             (* _diam diameter-factor)
             (* _diam diameter-factor)))
 
 ; quick text object
-(define (qto _text) 
+(define (qto _text)
     (build-extruded-type lfont _text 0.2))
 
-(define (build-orbit _dist) 
+(define (build-orbit _dist)
     (build-torus 0.01 ; thickness
                  (* _dist astro-unit) ; radius
                  32 ; segments
@@ -59,7 +59,7 @@
 (define sun (make-star "sun" 10.9 (vector 1 1 0)))
 
 (define solar-system (make-star-system sun
-    (list 
+    (list
                     ; see /wikipedia/Planet
                     ; par name             diamtr distn period mn color  r   g   b
          (make-planet sun (qto "mercury")  0.382  0.39   0.24 0  (vector 0.6 0.6 0.6))
@@ -85,41 +85,24 @@
         (draw-sphere)))
 
 (define (draw-planet _planet)
-;    (with-state 
-;        (colour (planet-color _planet))
-;        (translate (qtv (planet-distance _planet) (planet-period _planet)))
-;        (scale (qsv (planet-diameter _planet)))
-;        (draw-sphere))
      (let ((ts-v (qtv (planet-distance _planet) (planet-period _planet)))
            (sc-v (qsv (planet-diameter _planet))))
-          ; planet 
+          ; planet
           (with-state
               (colour (planet-color _planet))
               (translate ts-v)
-              (scale sc-v)    
+              (scale sc-v)
               (draw-sphere))
           ; label
           (with-primitive (planet-label _planet)
-              (identity)  
+              (identity)
               (colour (planet-color _planet))
               (translate ts-v)
-              (scale (vmul sc-v 2)))
-          ; moons           
-#;          (do ((i 0 (+ i 1)))
-              ((>= i (planet-moons _planet)))
-              (with-state  
-                  (colour (planet-color _planet))
-                  (let ((_factor (* (planet-diameter _planet) diameter-factor)))
-                      (translate (vector (- (- (vector-ref ts-v 0) 
-                                               (* i _factor 4)) (* _factor 2))
-                                         (+ (vector-ref ts-v 1) _factor)
-                                         0))
-                      (scale (vmul sc-v (* _factor 0.5)))
-                      (draw-sphere))))))
-                  
+              (scale (vmul sc-v 2)))))
 
 (define (render)
     (draw-star (star-system-star solar-system))
     (for-each draw-planet (star-system-planets solar-system)))
 
 (every-frame (render))
+
